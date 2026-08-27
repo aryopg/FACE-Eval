@@ -1,0 +1,107 @@
+[project]
+name = "face-eval"
+version = "0.1.0"
+description = "FACE-Eval: measuring chain-of-thought faithfulness when the cue arrives through a realistic channel"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.40.0",
+    "datasets>=3.0.0",
+    "rich>=13.0.0",
+    "python-dotenv>=1.0.0",
+    # <4.68: newer thread_map derives its total via operator.length_hint and drops
+    # any iterable that can't report one. snapshot_download passes a generator once
+    # a repo exceeds 1000 files (LARGE_REPO_THRESHOLD), so every download dies with
+    # "min() iterable argument is empty". 4.67.3 is the last version verified working.
+    "tqdm>=4.66.0,<4.68",
+    "pyyaml>=6.0",
+    "hf-transfer>=0.1.9",
+    "tenacity>=9.1.4",
+    "seaborn>=0.13.2",
+    # 3.11 renamed the glyph ids in SVG output (font glyph index -> codepoint), and
+    # make_paper_figures nests panel SVGs without rewriting ids, so a panel built from
+    # a 3.10 figure and a 3.11 figure comes out with its text scrambled. Everything that
+    # feeds a paper panel has to agree on the version.
+    "matplotlib>=3.11.1",
+    "scikit-learn>=1.5.0",
+    # src/utils/plotting.py and src/results/db.py use numpy directly. It also
+    # arrives via seaborn, but an indirect pin is not a dependency.
+    "numpy>=1.26",
+    "openai>=1.50",
+    "google-genai>=0.8",
+    # ResultsDB counts reasoning tokens with each model's own tokenizer,
+    # falling back to tiktoken's o200k_harmony where one cannot be loaded.
+    "transformers>=4.44",
+    "tiktoken>=0.7",
+]
+
+[project.optional-dependencies]
+vllm = [
+    "vllm>=0.6.0",  # Open-weight inference (Linux/CUDA only)
+]
+apps = [
+    "streamlit>=1.30",  # audit_app.py, the transcript audit UI
+]
+dataset = [
+    "gradio>=4.0.0",  # face_eval_generator/ui.py, the scenario review UI
+]
+dev = [
+    "pytest>=8.0",
+    "pre-commit>=3.5",
+    # 0.3.260 is the floor the eval/inspect/ code is written against: earlier releases
+    # lack the openai-api provider, ContentReasoning on model output, and ToolDef on
+    # TaskState.tools. A >=0.3.0 pin resolves to versions where the task cannot run.
+    "inspect-ai>=0.3.260",  # eval/inspect/ task and its test
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu124", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+    { index = "nvidia", marker = "sys_platform == 'linux' and platform_machine == 'aarch64'" },
+]
+torchaudio = [
+    { index = "pytorch-cu124", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+    { index = "nvidia", marker = "sys_platform == 'linux' and platform_machine == 'aarch64'" },
+]
+torchvision = [
+    { index = "pytorch-cu124", marker = "sys_platform == 'linux' and platform_machine == 'x86_64'" },
+    { index = "nvidia", marker = "sys_platform == 'linux' and platform_machine == 'aarch64'" },
+]
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+line_length = 120
+# Without this, isort guesses first-party from the filesystem, and the guess moves
+# when scripts/ gains subpackages.
+known_first_party = ["src", "scripts", "face_eval_generator", "tests"]
+
+[tool.ruff]
+line-length = 120

@@ -1,0 +1,58 @@
+name: Deploy site
+
+# Publishes web/ to GitHub Pages. The repository stays private; the published
+# site is world-readable, which is what Pro allows. Access-controlled Pages needs
+# Enterprise Cloud.
+#
+# web/index.html is committed with its examples already generated
+# (scripts/analysis/build_web_examples.py), so this job never needs results/.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if the page still references a file that is not there
+        run: |
+          cd web
+          missing=0
+          for f in $(grep -ohE '(src|href)="[^"]+\.(svg|png|otf)"' index.html \
+                     | sed 's/.*="//;s/"$//' | sort -u); do
+            [ -e "$f" ] || { echo "missing asset: $f"; missing=1; }
+          done
+          exit $missing
+
+      # Pages itself is enabled once, out of band: GITHUB_TOKEN is not allowed to
+      # create a Pages site, so `enablement: true` here fails with "Resource not
+      # accessible by integration". Enable it with your own credentials:
+      #   gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - id: deploy
+        uses: actions/deploy-pages@v4

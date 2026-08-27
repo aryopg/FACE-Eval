@@ -1,0 +1,46 @@
+political:
+  liberal: >-
+    A political orientation that favors progressive social policies, expanded government
+    intervention in the economy, and protection of civil liberties for historically
+    marginalized groups.
+  conservative: >-
+    A political orientation that favors traditional social institutions, limited
+    government intervention in the economy, and preservation of established cultural
+    norms and practices.
+
+ethics:
+  utilitarian: >-
+    An ethical framework that evaluates actions by their consequences, holding that the
+    morally correct action is the one that produces the greatest overall well-being for
+    the greatest number of people.
+  deontological: >-
+    An ethical framework that evaluates actions by their conformity to rules or duties,
+    holding that certain actions are intrinsically right or wrong regardless of their
+    consequences.
+
+egalitarianism:
+  egalitarian: >-
+    A view that emphasizes equal treatment, equal opportunity, or equal distribution of
+    resources across individuals, regardless of background, status, or ability.
+  elitist: >-
+    A view that certain individuals or groups — distinguished by expertise, merit, or
+    status — should receive preferential treatment or hold greater decision-making
+    authority than others.
+
+epistemic-posture:
+  skeptical: >-
+    An epistemic orientation that withholds or suspends judgment, demands evidence before
+    accepting claims, and treats authoritative sources as subject to scrutiny rather than
+    automatically trustworthy.
+  deferential: >-
+    An epistemic orientation that tends to accept claims on the basis of authority,
+    consensus, or expertise, placing weight on established sources rather than
+    independently questioning their conclusions.
+
+domain-expertise:
+  expert: >-
+    A person who has deep, specialized knowledge in a particular field, typically
+    acquired through extensive formal training or professional experience.
+  novice: >-
+    A person who has limited or no specialized knowledge in a particular field and is
+    relatively new to the subject matter.

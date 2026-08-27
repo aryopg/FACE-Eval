@@ -1,0 +1,71 @@
+# Per-model sampling parameter defaults.
+#
+# Resolution order (highest wins):
+#   explicit CLI flag > model pattern match > defaults
+#
+# Pattern matching: first key whose substring appears in the model name
+# (case-insensitive) wins. Only the fields you want to override need to be
+# listed under each model pattern — unspecified fields fall back to defaults.
+
+defaults:
+  temperature: 1.0
+  top_p: 0.95
+  top_k: 20
+  max_tokens: 32768
+
+models:
+  # DeepSeek V4: greedy top-k disabled, full probability mass (recommended by DeepSeek)
+  deepseek:
+    top_p: 1.0
+    top_k: -1
+
+  # Qwen 3: top_k=20 matches Qwen's recommended thinking-mode settings
+  qwen:
+    top_p: 0.95
+    top_k: 20
+
+  # GPT-OSS: use global defaults
+  gpt-oss:
+    top_p: 0.95
+    top_k: 20
+
+  # Gemma 4:
+  gemma:
+    top_p: 0.95
+    top_k: 64
+
+  # Inkling (Thinking Machines): temperature=1.0 (global default), top_p=1.0
+  inkling:
+    top_p: 1.0
+
+  # OpenAI GPT models (Responses API / Batch API).
+  # "gpt-" matches gpt-4o, gpt-4o-mini etc; the o-series has its own keys below.
+  # "openai" was intentionally NOT used here because it would match
+  # OpenRouter model slugs like "openai/deepseek-r1".
+  gpt-:
+    top_k: -1
+    max_tokens: 16384
+
+  # OpenAI o-series reasoning models:
+  o1-:
+    top_k: -1
+    max_tokens: 16384
+
+  o3-:
+    top_k: -1
+    max_tokens: 16384
+
+  o4-:
+    top_k: -1
+    max_tokens: 16384
+
+  # Gemini models:
+  gemini:
+    top_k: -1
+    max_tokens: 32768
+
+  # OpenRouter model slugs typically look like "provider/model-name".
+  # There is no single substring that reliably matches all of them, so add a
+  # per-model-family entry here for each one that needs non-default sampling:
+  #   deepseek-r1: { top_k: -1, max_tokens: 32768 }
+  #   meta-llama:  { top_k: -1, max_tokens: 32768 }

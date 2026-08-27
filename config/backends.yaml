@@ -1,0 +1,25 @@
+# Model name pattern → backend
+# First matching pattern wins (case-insensitive substring match).
+# If no pattern matches, 'default' is used.
+
+patterns:
+  # vLLM-hosted models — must come before generic "gpt-" to avoid misrouting
+  - pattern: "gpt-oss"
+    backend: vllm
+  # OpenAI API models
+  - pattern: "gpt-"
+    backend: openai
+  - pattern: "o1-"
+    backend: openai
+  - pattern: "o3-"
+    backend: openai
+  - pattern: "o4-"
+    backend: openai
+  # Anthropic
+  - pattern: "claude-"
+    backend: anthropic
+  # Google
+  - pattern: "gemini-"
+    backend: gemini
+
+default: vllm
