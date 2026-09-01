@@ -371,11 +371,14 @@ config file passes `pytest` and fails at runtime. Check those paths by hand.
 ## Citation
 
 ```bibtex
-@misc{face-eval,
-  title  = {Chain-of-Thought Faithfulness of Reasoning Models Varies with Where and How Preference Cues Are Delivered},
-  author = {Aryo Pradipta Gema and Neel Rajani and Rohit Saxena and Wai-Chung Kwan and Pasquale Minervini},
-  year   = {2026},
-  note   = {Preprint}
+@article{gema2026faceeval,
+  title={Chain-of-Thought Faithfulness of Reasoning Models Varies with Where and How Preference Cues Are Delivered}, 
+  author={Aryo Pradipta Gema and Neel Rajani and Rohit Saxena and Wai-Chung Kwan and Pasquale Minervini},
+  year={2026},
+  eprint={2608.29464},
+  archivePrefix={arXiv},
+  primaryClass={cs.CL},
+  url={https://arxiv.org/abs/2608.29464}, 
 }
 ```
 
